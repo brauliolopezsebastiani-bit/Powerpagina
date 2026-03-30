@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power | Soluciones Industriales de Alto Rendimiento</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">POWER<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#catalogo">Equipos</a></li>
+            <li><a href="#">Servicios</a></li>
+            <li><a href="#">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">Distribuidor Autorizado Perú</span>
+            <h1>Potencia Industrial para Proyectos Exigentes</h1>
+            <p>Especialistas en aire comprimido, energía móvil y tratamiento de aire con tecnología de eficiencia premium.</p>
+            <div class="hero-btns">
+                <a href="#catalogo" class="btn-main">Explorar Catálogo</a>
+                <a href="#" class="btn-alt">Contactar Asesor</a>
+            </div>
+        </div>
+        <div class="hero-overlay"></div>
+    </header>
+
+    <div id="catalogo" class="main-container">
+        <aside class="sidebar">
+            <div class="sticky-sidebar">
+                <h2>FILTROS</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="¿Qué equipo buscas?">
+                </div>
+                <div class="filter-group">
+                    <h3>Categoría</h3>
+                    <label class="filter-item"><input type="checkbox" value="Compresoras Eléctricas"> Compresoras</label>
+                    <label class="filter-item"><input type="checkbox" value="Generadores de Energía"> Generadores</label>
+                    <label class="filter-item"><input type="checkbox" value="Tratamiento de Aire"> Tratamiento Aire</label>
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            <div class="grid-header">
+                <p>MOSTRANDO <span id="count">0</span> EQUIPOS DISPONIBLES</p>
+            </div>
+            <div class="products-grid" id="grid">
+                </div>
+        </main>
+    </div>
+
+    <script src="productos.js"></script>
+    <script>
+        const grid = document.getElementById('grid');
+        const countSpan = document.getElementById('count');
+
+        function render(lista) {
+            countSpan.innerText = lista.length;
+            grid.innerHTML = lista.map(p => `
+                <div class="product-card">
+                    <div class="card-head">
+                        <span class="status-badge">${p.etiqueta}</span>
+                        <span class="brand-tag">${p.marca}</span>
+                    </div>
+                    <a href="producto.html?id=${p.id}" class="image-wrapper">
+                        <img src="${p.imagen}" alt="${p.nombre}">
+                    </a>
+                    <div class="product-info">
+                        <span class="cat">${p.categoria}</span>
+                        <h4>${p.nombre}</h4>
+                        <div class="price-row">
+                            <span class="price-new">S/ ${p.precioOferta.toLocaleString()}</span>
+                            <span class="price-old">S/ ${p.precioOriginal.toLocaleString()}</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="producto.html?id=${p.id}" class="btn-view">VER FICHA</a>
+                            <a href="https://wa.me/51999999999?text=Cotizar ${p.nombre}" class="btn-wa">WHATSAPP</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Eventos de filtro y búsqueda (igual que antes)
+        document.addEventListener('change', () => {
+            const selected = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(c => c.value);
+            render(selected.length > 0 ? productos.filter(p => selected.includes(p.categoria)) : productos);
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            render(productos.filter(p => p.nombre.toLowerCase().includes(term) || p.modelo.toLowerCase().includes(term)));
+        });
+
+        render(productos);
+    </script>
+</body>
+</html>
